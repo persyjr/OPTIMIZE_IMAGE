@@ -2,6 +2,8 @@ from PIL import Image
 import os
 import shutil
 import platform
+so=platform.system() #sistema operativo
+    
 
 def optimizar_Pillow(image,name,rootdir,peso):
     quality= 90
@@ -15,14 +17,20 @@ def optimizar_Pillow(image,name,rootdir,peso):
             x = round(ratio, 4)
             print(f'Para {name} peso:{peso}[Bytes]\nLargo. Reduccion: {x*100}[%] - largo:{nuevolargo}[px] - ancho:{int(ancho*ratio)}[px]\n')
             reducida = image.resize((nuevolargo, int(ancho*ratio)))
-            reducida.save(f"{rootdir}\\{name}", optimize=True, quality=quality)
+            if so=="Windows": #si es windows
+                reducida.save(f"{rootdir}\\{name}", optimize=True, quality=quality)
+            elif os== 'Linux': 
+                reducida.save(f"{rootdir}/{name}", optimize=True, quality=quality)
         elif ancho > limite_pixeles:
             nuevoAncho = limite_pixeles
             ratio=(nuevoAncho/ancho)
             x = round(ratio, 4)
             print(f'Para {name} peso:{peso}[Bytes]\nAncho. Reduccion: {x*100}[%] - largo:{(int(largo*ratio))}[px] - ancho:{int(ancho*ratio)}[px]\n')
             reducida = image.resize((int(largo*ratio), nuevoAncho))
-            reducida.save(f"{rootdir}\\{name}", optimize=True, quality=quality)
+            if so=="Windows": #si es windows
+                reducida.save(f"{rootdir}\\{name}", optimize=True, quality=quality)
+            elif so== 'Linux': 
+                reducida.save(f"{rootdir}/{name}", optimize=True, quality=quality)
         """if peso >400000:
         #else:
             print(f'Para {name} peso:{peso}[Bytes]\nPeso. Se optimiza peso al  50% \nConservan largo:{largo}[px] ancho:{ancho}[px]\n')
@@ -54,7 +62,7 @@ def limpiar_pantalla():
     so=platform.system() #sistema operativo
     if so=="Windows": #si es windows
         os.system("cls")
-    elif os== 'linux': #si es linux
+    elif so== 'Linux': #si es linux
         os.system("clear") 
 
 
@@ -80,6 +88,7 @@ def directorio_verificado(path):
             return path
 ### ### ### MAIN ### ### ### ### ### ### ### ### ### ###
 if __name__ == '__main__':
+    
     limpiar_pantalla()
     print("############# INICIANDO PROGRAMA ############################### \n")
     print("############# 1. CREAR UN BACK UP ##############################  ")
@@ -89,9 +98,14 @@ if __name__ == '__main__':
         crearCopia=input("Desea cear un backup de algún directorio?\n yes or not :")
         
     if crearCopia=='yes' or crearCopia.lower()=='yes':
-        print('\n1.1. Debe ingresar la ruta del directorio de origen:')
-        print('Ej. Dir externo: ruta. C:\\Users\\eadel\\OneDrive\\Desktop\\PILDORAS_DJANGO')
-        print('Ej. Dir actual: media_backup')
+        so=platform.system() #sistema operativo
+        print(f'\n1.1. Debe ingresar la ruta del directorio de origen:{so}') 
+        if so=="Windows": #si es windows
+            print(f'Ej. path  : {os.getcwd()}\\mi_directorio_origen')
+        elif so== 'Linux': #si es linux
+            print(f'Ej. path  : {os.getcwd()}/mi_directorio_origen')   
+        
+        print(f'Ej. Relative path : mi_directorio_origen')
         pathCarpetaOrigen=input("Ingresar nombre de directorio origen: ")        
         directorioOrigen_Verificado=directorio_verificado(pathCarpetaOrigen)
 
@@ -103,7 +117,10 @@ if __name__ == '__main__':
             pathCarpetaDestino=input("Ingresar nombre de directorio destino: ")
             try:
                 shutil.copytree(pathCarpetaOrigen,pathCarpetaDestino)
-                print(f"ok: El directorio se encuentra la ruta actual folder :\n{pathCarpetaDestino} ")
+                if so=="Windows": #si es windows
+                    print(f"\nOk: El directorio destino se encuentra la ruta:\n {os.getcwd()}\\{pathCarpetaDestino} ")
+                elif so== 'Linux': #si es linux
+                    print(f"\nOk: El directorio destino se encuentra la ruta:\n {os.getcwd()}/{pathCarpetaDestino} ")
             except:
                 print(f'Error!: No fue posible crear backup a {pathCarpetaOrigen}')
     
@@ -116,9 +133,12 @@ if __name__ == '__main__':
         optimizarDirectorio=input("Desea cear un backup de algún directorio?\n yes or not :")
         
     if optimizarDirectorio=='yes' or optimizarDirectorio.lower()=='yes':
-        print('\n2.1. Debe ingresar la ruta del directorio de origen:')
-        print('Ej. Dir externo: ruta. C:\\Users\\eadel\\OneDrive\\Desktop\\PILDORAS_DJANGO')
-        print('Ej. Dir actual: media_optimizado')
+        if so=="Windows": #si es windows
+            print(f'Ej. path  : {os.getcwd()}\\mi_directorio_origen')
+        elif so== 'Linux': #si es linux
+            print(f'Ej. path  : {os.getcwd()}/mi_directorio_origen')
+
+        print(f'Ej. Relative path : mi_directorio_origen')
         pathCarpetaOrigen=input("Ingresar nombre de directorio origen: ")
         directorioOrigen_Verificado=directorio_verificado(pathCarpetaOrigen)
         if directorioOrigen_Verificado== 'NOEXISTE':
