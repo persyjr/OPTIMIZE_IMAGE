@@ -4,34 +4,34 @@ import shutil
 import platform
 
 def optimizar_Pillow(image,name,rootdir,peso):
-    quality= 50
+    quality= 90
     limite_pixeles=1280
     largo=image.size[0]
     ancho=image.size[1]
-    
-    if largo > limite_pixeles:
-        nuevolargo = limite_pixeles
-        ratio=(nuevolargo/largo)
-        x = round(ratio, 4)
-        print(f'Para {name} peso:{peso}[Bytes]\nLargo. Reduccion: {x*100}[%] - largo:{nuevolargo}[px] - ancho:{int(ancho*ratio)}[px]\n')
-        reducida = image.resize((nuevolargo, int(ancho*ratio)))
-        reducida.save(f"{rootdir}\\{name}", optimize=True, quality=quality)
-    elif ancho > limite_pixeles:
-        nuevoAncho = limite_pixeles
-        ratio=(nuevoAncho/ancho)
-        x = round(ratio, 4)
-        print(f'Para {name} peso:{peso}[Bytes]\nAncho. Reduccion: {x*100}[%] - largo:{(int(largo*ratio))}[px] - ancho:{int(ancho*ratio)}[px]\n')
-        reducida = image.resize((int(largo*ratio), nuevoAncho))
-        reducida.save(f"{rootdir}\\{name}", optimize=True, quality=quality)
-    elif peso >400000:
-    #else:
-        print(f'Para {name} peso:{peso}[Bytes]\nPeso. Se optimiza peso al  50% \nConservan largo:{largo}[px] ancho:{ancho}[px]\n')
-        reducida = image.resize((largo, ancho))
-        reducida.save(f"{rootdir}\\{name}", optimize=True, quality=quality)
+    if peso >400000:
+        if largo > limite_pixeles:
+            nuevolargo = limite_pixeles
+            ratio=(nuevolargo/largo)
+            x = round(ratio, 4)
+            print(f'Para {name} peso:{peso}[Bytes]\nLargo. Reduccion: {x*100}[%] - largo:{nuevolargo}[px] - ancho:{int(ancho*ratio)}[px]\n')
+            reducida = image.resize((nuevolargo, int(ancho*ratio)))
+            reducida.save(f"{rootdir}\\{name}", optimize=True, quality=quality)
+        elif ancho > limite_pixeles:
+            nuevoAncho = limite_pixeles
+            ratio=(nuevoAncho/ancho)
+            x = round(ratio, 4)
+            print(f'Para {name} peso:{peso}[Bytes]\nAncho. Reduccion: {x*100}[%] - largo:{(int(largo*ratio))}[px] - ancho:{int(ancho*ratio)}[px]\n')
+            reducida = image.resize((int(largo*ratio), nuevoAncho))
+            reducida.save(f"{rootdir}\\{name}", optimize=True, quality=quality)
+        """if peso >400000:
+        #else:
+            print(f'Para {name} peso:{peso}[Bytes]\nPeso. Se optimiza peso al  50% \nConservan largo:{largo}[px] ancho:{ancho}[px]\n')
+            reducida = image.resize((largo, ancho))
+            reducida.save(f"{rootdir}\\{name}", optimize=True, quality=quality)"""
    
  
 def navegarDirectorio(rootdir):
-    print(f'\n############# INICIANDO OPTIMIZACION ###############################') 
+    print(f'\n############# 2.2 INICIANDO OPTIMIZACION ###############################') 
     for rootdir, dirs, files in os.walk(rootdir,onerror=None):
         for subdir in dirs:
             path=os.path.join(rootdir, subdir)
@@ -133,6 +133,6 @@ if __name__ == '__main__':
             #RutaDestino=directorio_Actual+"\\"+pathCarpetaOrigen
             #navegarDirectorio(RutaDestino)
             navegarDirectorio(pathCarpetaOrigen)
-            print(f'\n############# FINALIZA OPTIMIZACION ###############################')
+            print(f'\n############# 2.3 FINALIZA OPTIMIZACION ###############################')
             print(f'Revisar directorio: {pathCarpetaOrigen}')
             
