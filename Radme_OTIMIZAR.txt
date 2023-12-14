@@ -1,0 +1,17 @@
+$ python optimizar.py
+-Desea cear un backup de algún directorio?
+ yes or not :yes
+
+-Ingresar nombre de directorio: appfiles\infraestructura
+-Ingresar nombre de directorio destino: appfiles\infraestructurabackup
+
+### asegurarse de que se crea el backup con el mismo peso
+Ok: El directorio destino se encuentra la ruta:
+ C:\Users\eadel\OneDrive\Documents\VISUAL_STUDIO_PROJECTS\LEARNING_PROJECTS\OPTIMIZE_IMAGE\appfiles\infraestructuracopy
+
+Desea optimizar imagenes de algun directorio?
+ yes or not :yes
+Ingresar nombre de directorio origen: appfiles\infraestructura
+############# 2.3 FINALIZA OPTIMIZACION ###############################
+Revisar directorio: appfiles\infraestructura
+

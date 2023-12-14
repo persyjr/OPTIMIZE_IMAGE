@@ -5,11 +5,12 @@ import platform
 so=platform.system() #sistema operativo
     
 
-def optimizar_Pillow(image,name,rootdir,peso):
+def optimizar_Pillow(image,name,rootdir,path):
     quality= 90
     limite_pixeles=1280
     largo=image.size[0]
     ancho=image.size[1]
+    peso=os.path.getsize(path)
     if peso >400000:
         if largo > limite_pixeles:
             nuevolargo = limite_pixeles
@@ -18,7 +19,11 @@ def optimizar_Pillow(image,name,rootdir,peso):
             print(f'Para {name} peso:{peso}[Bytes]\nLargo. Reduccion: {x*100}[%] - largo:{nuevolargo}[px] - ancho:{int(ancho*ratio)}[px]\n')
             reducida = image.resize((nuevolargo, int(ancho*ratio)))
             if so=="Windows": #si es windows
-                reducida.save(f"{rootdir}\\{name}", optimize=True, quality=quality)
+                print(f'salida1 {name} peso {os.path.getsize(path)}')
+                reducida.save(f"{rootdir}/{name}", optimize=True, quality=quality)
+                if os.path.getsize(path) >peso:
+                    print('#### NO SE GUARDA')
+                
             elif os== 'Linux': 
                 reducida.save(f"{rootdir}/{name}", optimize=True, quality=quality)
         elif ancho > limite_pixeles:
@@ -29,8 +34,26 @@ def optimizar_Pillow(image,name,rootdir,peso):
             reducida = image.resize((int(largo*ratio), nuevoAncho))
             if so=="Windows": #si es windows
                 reducida.save(f"{rootdir}\\{name}", optimize=True, quality=quality)
+                print(f'salida1 {name} peso {os.path.getsize(path)}')
+                if os.path.getsize(path) >peso:
+                    print('#### NO SE GUARDA')
+               
             elif so== 'Linux': 
                 reducida.save(f"{rootdir}/{name}", optimize=True, quality=quality)
+        else:
+            print(f'Para {name} peso:{peso}[Bytes]\nPeso. Se optimiza peso al  90% \nConservan largo:{largo}[px] ancho:{ancho}[px]\n')
+            #reducida = image.resize((largo, ancho))
+            if so=="Windows": #si es windows
+                #reducida.save(f"{rootdir}\\{name}", optimize=True, quality=quality)
+                print(f'salida1 {name} peso {os.path.getsize(path)}')
+                if os.path.getsize(path) >peso:
+                    print('#### NO SE GUARDA')
+                
+            elif so== 'Linux': 
+                print('ok')
+                #reducida.save(f"{rootdir}/{name}", optimize=True, quality=quality)
+            
+        print(f'salida2 {name} peso {os.path.getsize(path)}')
         """if peso >400000:
         #else:
             print(f'Para {name} peso:{peso}[Bytes]\nPeso. Se optimiza peso al  50% \nConservan largo:{largo}[px] ancho:{ancho}[px]\n')
@@ -45,12 +68,12 @@ def navegarDirectorio(rootdir):
             path=os.path.join(rootdir, subdir)
         for subfile in files:
             path=os.path.join(rootdir, subfile)
-            peso=os.path.getsize(path)
+            #peso=os.path.getsize(path)
             print(subfile)
             if ('.jpg' in subfile) or ('.jpeg' in subfile) or ('.jfif' in subfile) or ('.png' in subfile):
                 try:
                     imagen = Image.open(os.path.join(rootdir, subfile))
-                    optimizar_Pillow(imagen,subfile,rootdir,peso)
+                    optimizar_Pillow(imagen,subfile,rootdir,path)
                 except:
                     print(f'No fue posible optimizar archivo: {subfile}')                
             else:
@@ -59,7 +82,7 @@ def navegarDirectorio(rootdir):
 
 
 def limpiar_pantalla():
-    so=platform.system() #sistema operativo
+    #so=platform.system() #sistema operativo
     if so=="Windows": #si es windows
         os.system("cls")
     elif so== 'Linux': #si es linux
