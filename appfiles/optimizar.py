@@ -23,7 +23,7 @@ def optimizarImagenPillow(image,name,rootdir,path):
         elif ancho > limite_pixeles:
             nuevoAncho = limite_pixeles
             ratio=(nuevoAncho/ancho)
-            x = round(ratio, 4)
+            x = round(ratio, 2)
             reducida = image.resize((int(largo*ratio), nuevoAncho))
             if so=="Windows": 
                 reducida.save(f"{rootdir}\\{name}", optimize=True, quality=quality)
@@ -38,23 +38,86 @@ def optimizarImagenPillow(image,name,rootdir,path):
                 reducida.save(f"{rootdir}/{name}", optimize=True, quality=quality)
         reduccion=(os.path.getsize(path)/peso)*100
         reduccion=round(reduccion, 2)
-        print(f'**\t{name}: peso incial: {peso}[Bytes] - peso final: {os.path.getsize(path)}[Bytes]\n\t{reduccion} [%] : % Ocupacion Final - Reduccion dimensional: {x*100}[%]')
-            
+        pesoinicialmegabytes=peso/1000000
+        pesoinicial = round(pesoinicialmegabytes, 3)
+        fpeso=os.path.getsize(path)
+        pesofinalmegabytes=fpeso/1000000
+        pesofinal = round(pesofinalmegabytes, 3)
+        print(f'**\t{name}: peso incial: {pesoinicial}[MB] - peso final: {pesofinal}[MB] - %Ocupacion Final {reduccion}[%]')
+
+def explorarDirectorio(rootdir):
+    
+    pesoTotal=0
+    contadorImagenes=0
+    #directorios={}
+    #directorios2=[]
+    directorios3={}
+    
+    for rootdir, dirs, files in os.walk(rootdir,onerror=None):
+        
+        for subdir in dirs:
+            pass
+            #path=os.path.join(rootdir, subdir)            
+        for subfile in files:
+            if ('.jpg' in subfile) or ('.jpeg' in subfile) or ('.jfif' in subfile) or ('.png' in subfile):
+                path1=os.path.join(rootdir, subfile)
+                peso=os.path.getsize(path1)
+                imagen={}
+                if peso >400000:
+                    dirname=os.path.dirname(path1)
+                    imagen['dirname']=dirname
+                    imagen['nombre']=subfile
+                    imagen['peso']=peso
+                    #directorios2.append(imagen)
+                    #directorios3[f'{subfile}']=imagen
+                    try:
+                        directorios3[f'{dirname}'].append(imagen)
+                    except:
+                        directorios3[f'{dirname}']=[imagen]
+                    #directorios[f'{dirname}']=dirname
+                    pesoTotal+=peso
+                    contadorImagenes+=1
+
+    megabytes=pesoTotal/1000000
+    gigabytes=megabytes/1000
+    xM = round(megabytes, 2)
+    xG=round(gigabytes, 2)
+    print(f'\n############# 1.1 RESULTADOS EXPLORACIÓN #########\n') 
+    #print(f'\nSubdirectorios con imagenes para optimizar:')
+    #for directorio in directorios:
+        #print(directorio)
+    
+    #for directorio in directorios2:
+        #print(directorio)
+        
+    #print(directorios2)
+    #print(directorios3)
+    for directorio in directorios3:
+        listaImagenes=directorios3[f'{directorio}']
+        #print(listaImagenes)
+        totalpeso=0
+        for objeto in listaImagenes:
+            #print(objeto)
+            totalpeso+=(objeto['peso'])/1000000
+        print(f'Peso: {totalpeso}[MB] - Imagenes: {len(listaImagenes)} - Directorio: {directorio}')
+    print(f'\nImagenes sup 400KB: {contadorImagenes} - Peso Total: {xM}[MB] - {xG}[GB]\n')
 def funOptimizarDirectorio(rootdir):
-    print(f'\n############# 2.2 INICIANDO OPTIMIZACION #########') 
+    print(f'\n############# 3.2 INICIANDO OPTIMIZACION #########') 
     for rootdir, dirs, files in os.walk(rootdir,onerror=None):
         for subdir in dirs:
-            path=os.path.join(rootdir, subdir)
+            #path=os.path.join(rootdir, subdir)
+            pass
         for subfile in files:
-            path=os.path.join(rootdir, subfile)
+            path1=os.path.join(rootdir, subfile)
             if ('.jpg' in subfile) or ('.jpeg' in subfile) or ('.jfif' in subfile) or ('.png' in subfile):
                 try:
                     imagen = Image.open(os.path.join(rootdir, subfile))
-                    optimizarImagenPillow(imagen,subfile,rootdir,path)
+                    optimizarImagenPillow(imagen,subfile,rootdir,path1)
                 except:
                     print(f'No fue posible optimizar archivo: {subfile}')                
             else:
-                print(f'--\t{subfile}: No es una imagen')
+                pass
+                #print(f'--\t{subfile}: No es una imagen')
     
 def limpiar_pantalla():
     if so=="Windows": 
@@ -70,7 +133,7 @@ def directorio_verificado(path):
         print()
         if existe_directorio == True:
             print(f"#\tOk path seleccionado: {path}")
-            path= path#salimos del bucle
+            path= path
             break
         if intentos>3:
             print(f'#\tSupera el maximo de intentos {intentos}')
@@ -81,9 +144,34 @@ def directorio_verificado(path):
             path=input("#\tIngresar nombre de directorio: ")
             existe_directorio=os.path.exists(path)
     return path
+def explorar():
+    print("############# 1. EXPLORAR UN DIRECTORIO ################")
+    explora=input("#\tDesea explorar algún directorio?\n#\tyes or not :")
+    if explora!='yes' and explora.lower()!='yes' and explora!='not' and explora.lower()!='not' :
+        print('\nError!: Respuesta incorrecta ultimo intento ')
+        explora=input("#\tDesea explorar algún directorio?\n#\tyes or not :")
+        
+    if explora=='yes' or explora.lower()=='yes':
+        so=platform.system() 
+        print(f'\n#\t1.1. Debes ingresar la ruta del directorio de origen so: {so}') 
+        if so=="Windows": 
+            print(f'#\tEj. path  : {os.getcwd()}\\mi_directorio_origen')
+        elif so== 'Linux': 
+            print(f'#\tEj. path  : {os.getcwd()}/mi_directorio_origen')   
+        
+        print(f'#\tEj. Relative path : mi_directorio_origen')
+        pathCarpetaOrigen=input("#\tIngresar ruta de directorio que desea explorar: ")        
+        directorioOrigen_Verificado=directorio_verificado(pathCarpetaOrigen)
+
+        if directorioOrigen_Verificado== 'NOEXISTE':
+            print(f'\nError!: No fue posible explorar Directorio\n{pathCarpetaOrigen}')
+        else:
+            pathCarpetaOrigen=directorioOrigen_Verificado
+            print(f'\nOk: El nombre del directorio origen es:\n{pathCarpetaOrigen}')
+            explorarDirectorio(pathCarpetaOrigen)
 
 def crear_backup():
-    print("############# 1. CREAR UN BACK UP ################")
+    print("############# 2. CREAR UN BACK UP ################")
     crearCopia=input("#\tDesea crear un backup de algún directorio?\n#\tyes or not :")
     if crearCopia!='yes' and crearCopia.lower()!='yes' and crearCopia!='not' and crearCopia.lower()!='not' :
         print('\nError!: Respuesta incorrecta ultimo intento ')
@@ -91,7 +179,7 @@ def crear_backup():
         
     if crearCopia=='yes' or crearCopia.lower()=='yes':
         so=platform.system() 
-        print(f'\n#\t1.1. Debes ingresar la ruta del directorio de origen so: {so}') 
+        print(f'\n#\t2.1. Debes ingresar la ruta del directorio de origen so: {so}') 
         if so=="Windows": 
             print(f'#\tEj. path  : {os.getcwd()}\\mi_directorio_origen')
         elif so== 'Linux': 
@@ -114,23 +202,23 @@ def crear_backup():
             try:
                 shutil.copytree(pathCarpetaOrigen,pathCarpetaDestino)
                 if so=="Windows":
-                    print('\n############# 1.2 FINALIZA BACKUP ################')
+                    print('\n############# 2.2 FINALIZA BACKUP ################')
                     print(f"Ok: El directorio destino se encuentra la ruta:\n {os.getcwd()}\\{pathCarpetaDestino} ")
                 elif so== 'Linux':
-                    print('\n############# 1.2 FINALIZA BACKUP ################')
+                    print('\n############# 2.2 FINALIZA BACKUP ################')
                     print(f"Ok: El directorio destino se encuentra la ruta:\n {os.getcwd()}/{pathCarpetaDestino} ")
             except:
                 print(f'Error!: No fue posible crear backup a {pathCarpetaOrigen}')
 
 def optimizar():
-    print("\n\n###### 2. OPTIMIZAR IMAGENES DE DIRECTORIO #######")
+    print("\n\n###### 3. OPTIMIZAR IMAGENES DE DIRECTORIO #######")
     optimizarDirectorio=input("#\tDesea optimizar imagenes de algun directorio?\n#\tyes or not :")
     if optimizarDirectorio!='yes' and optimizarDirectorio.lower()!='yes' and optimizarDirectorio!='not' and optimizarDirectorio.lower()!='not' :
         print('\nError!: Respuesta incorrecta ultimo intento ')
         optimizarDirectorio=input("#\tDesea optimizar imagenes de algun directorio?\n#\tyes or not :")
         
     if optimizarDirectorio=='yes' or optimizarDirectorio.lower()=='yes':
-        print(f'\n#\t2.1. Debes ingresar la ruta del directorio de origen so: {so}')
+        print(f'\n#\t3.1. Debes ingresar la ruta del directorio de origen so: {so}')
         if so=="Windows":
             print(f'#\tEj. path  : {os.getcwd()}\\mi_directorio_origen')
         elif so== 'Linux':
@@ -145,7 +233,7 @@ def optimizar():
         else:
             pathCarpetaOrigen=directorioOrigen_Verificado
             funOptimizarDirectorio(pathCarpetaOrigen)
-            print(f'\n###### 2.3 FINALIZA OPTIMIZACION #################')
+            print(f'\n###### 3.3 FINALIZA OPTIMIZACION #################')
             print(f'Revisar directorio: {pathCarpetaOrigen}')
 
 ### ### ### MAIN ### ### ### ### ### ### ### ### ### ###
@@ -179,13 +267,14 @@ if __name__ == '__main__':
 
     while opcion!=4:        
         if opcion==1:
-            limpiar_pantalla()
+            #limpiar_pantalla()
             print("explorar directorio ")
+            explorar()
         elif opcion==2:
-            limpiar_pantalla()
+            #limpiar_pantalla()
             crear_backup()
         elif opcion==3:
-            limpiar_pantalla()
+            #limpiar_pantalla()
             print("Optimizar Imágenes en un Directorio")
             optimizar()
         elif opcion==4:
