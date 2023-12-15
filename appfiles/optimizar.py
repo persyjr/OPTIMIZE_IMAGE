@@ -49,12 +49,8 @@ def explorarDirectorio(rootdir):
     
     pesoTotal=0
     contadorImagenes=0
-    #directorios={}
-    #directorios2=[]
-    directorios3={}
-    
-    for rootdir, dirs, files in os.walk(rootdir,onerror=None):
-        
+    directorios3={}    
+    for rootdir, dirs, files in os.walk(rootdir,onerror=None):        
         for subdir in dirs:
             pass
             #path=os.path.join(rootdir, subdir)            
@@ -68,13 +64,10 @@ def explorarDirectorio(rootdir):
                     imagen['dirname']=dirname
                     imagen['nombre']=subfile
                     imagen['peso']=peso
-                    #directorios2.append(imagen)
-                    #directorios3[f'{subfile}']=imagen
                     try:
                         directorios3[f'{dirname}'].append(imagen)
                     except:
                         directorios3[f'{dirname}']=[imagen]
-                    #directorios[f'{dirname}']=dirname
                     pesoTotal+=peso
                     contadorImagenes+=1
 
@@ -83,24 +76,15 @@ def explorarDirectorio(rootdir):
     xM = round(megabytes, 2)
     xG=round(gigabytes, 2)
     print(f'\n############# 1.1 RESULTADOS EXPLORACIÓN #########\n') 
-    #print(f'\nSubdirectorios con imagenes para optimizar:')
-    #for directorio in directorios:
-        #print(directorio)
-    
-    #for directorio in directorios2:
-        #print(directorio)
-        
-    #print(directorios2)
-    #print(directorios3)
     for directorio in directorios3:
         listaImagenes=directorios3[f'{directorio}']
-        #print(listaImagenes)
         totalpeso=0
         for objeto in listaImagenes:
-            #print(objeto)
             totalpeso+=(objeto['peso'])/1000000
-        print(f'Peso: {totalpeso}[MB] - Imagenes: {len(listaImagenes)} - Directorio: {directorio}')
+        totalpeso=round(totalpeso, 3)
+        print(f'Imagenes: {len(listaImagenes)} - Peso: {totalpeso}[MB] - Subdirectorio: {directorio}')
     print(f'\nImagenes sup 400KB: {contadorImagenes} - Peso Total: {xM}[MB] - {xG}[GB]\n')
+
 def funOptimizarDirectorio(rootdir):
     print(f'\n############# 3.2 INICIANDO OPTIMIZACION #########') 
     for rootdir, dirs, files in os.walk(rootdir,onerror=None):
