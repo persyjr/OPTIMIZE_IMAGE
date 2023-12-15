@@ -18,7 +18,7 @@ def optimizarImagenPillow(image,name,rootdir,path):
             reducida = image.resize((nuevolargo, int(ancho*ratio)))
             if so=="Windows": 
                 reducida.save(f"{rootdir}/{name}", optimize=True, quality=quality)
-            elif os== 'Linux': 
+            elif so== 'Linux': 
                 reducida.save(f"{rootdir}/{name}", optimize=True, quality=quality)
         elif ancho > limite_pixeles:
             nuevoAncho = limite_pixeles
