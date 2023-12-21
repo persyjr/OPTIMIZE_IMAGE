@@ -163,10 +163,10 @@ def ignore_files(folder, files):
         if not os.path.isdir(path1):
             if not peso >400000 :
                 
-                    print(f'ignora {path1}')
+                    #print(f'ignora {path1}')
                     ignored_items.append(f)
             if not(('.jpg' in path1) or ('.jpeg' in path1) or ('.jfif' in path1) or ('.png' in path1)):
-                    print(f'ignora {path1}')
+                    #print(f'ignora {path1}')
                     ignored_items.append(f)
     return ignored_items              
 def crear_backup_imagenes():
