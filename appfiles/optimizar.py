@@ -43,13 +43,13 @@ def optimizarImagenPillow(image,name,rootdir,path):
         fpeso=os.path.getsize(path)
         pesofinalmegabytes=fpeso/1000000
         pesofinal = round(pesofinalmegabytes, 3)
-        print(f'**\t{name}: peso incial: {pesoinicial}[MB] - peso final: {pesofinal}[MB] - %Ocupacion Final {reduccion}[%]')
+        print(f'**\tnombre: {name}, incial: {pesoinicial} , final: {pesofinal} , %Ocupacion: {reduccion}')
 
 def explorarDirectorio(rootdir):
     
     pesoTotal=0
     contadorImagenes=0
-    directorios3={}    
+    todosDirectorios={}    
     for rootdir, dirs, files in os.walk(rootdir,onerror=None):        
         for subdir in dirs:
             pass
@@ -65,9 +65,9 @@ def explorarDirectorio(rootdir):
                     imagen['nombre']=subfile
                     imagen['peso']=peso
                     try:
-                        directorios3[f'{dirname}'].append(imagen)
+                        todosDirectorios[f'{dirname}'].append(imagen)
                     except:
-                        directorios3[f'{dirname}']=[imagen]
+                        todosDirectorios[f'{dirname}']=[imagen]
                     pesoTotal+=peso
                     contadorImagenes+=1
 
@@ -76,8 +76,8 @@ def explorarDirectorio(rootdir):
     xM = round(megabytes, 2)
     xG=round(gigabytes, 2)
     print(f'\n############# 1.1 RESULTADOS EXPLORACIÓN #########\n') 
-    for directorio in directorios3:
-        listaImagenes=directorios3[f'{directorio}']
+    for directorio in todosDirectorios:
+        listaImagenes=todosDirectorios[f'{directorio}']
         totalpeso=0
         for objeto in listaImagenes:
             totalpeso+=(objeto['peso'])/1000000
@@ -128,6 +128,7 @@ def directorio_verificado(path):
             path=input("#\tIngresar nombre de directorio: ")
             existe_directorio=os.path.exists(path)
     return path
+
 def explorar():
     print("############# 1. EXPLORAR UN DIRECTORIO ################")
     explora=input("#\tDesea explorar algún directorio?\n#\tyes or not :")
@@ -153,6 +154,62 @@ def explorar():
             pathCarpetaOrigen=directorioOrigen_Verificado
             print(f'\nOk: El nombre del directorio origen es:\n{pathCarpetaOrigen}')
             explorarDirectorio(pathCarpetaOrigen)
+
+def ignore_files(folder, files):
+    ignored_items = []
+    for f in files :
+        path1=os.path.join(folder, f)
+        peso=os.path.getsize(path1)
+        if not os.path.isdir(path1):
+            if not peso >400000 :
+                
+                    print(f'ignora {path1}')
+                    ignored_items.append(f)
+            if not(('.jpg' in path1) or ('.jpeg' in path1) or ('.jfif' in path1) or ('.png' in path1)):
+                    print(f'ignora {path1}')
+                    ignored_items.append(f)
+    return ignored_items              
+def crear_backup_imagenes():
+    print("############# 2. CREAR UN BACK UP ################")
+    crearCopia=input("#\tDesea crear un backup de algún directorio?\n#\tyes or not :")
+    if crearCopia!='yes' and crearCopia.lower()!='yes' and crearCopia!='not' and crearCopia.lower()!='not' :
+        print('\nError!: Respuesta incorrecta ultimo intento ')
+        crearCopia=input("#\tDesea crear un backup de algún directorio?\n#\tyes or not :")
+        
+    if crearCopia=='yes' or crearCopia.lower()=='yes':
+        so=platform.system() 
+        print(f'\n#\t2.1. Debes ingresar la ruta del directorio de origen so: {so}') 
+        if so=="Windows": 
+            print(f'#\tEj. path  : {os.getcwd()}\\mi_directorio_origen')
+        elif so== 'Linux': 
+            print(f'#\tEj. path  : {os.getcwd()}/mi_directorio_origen')   
+        
+        print(f'#\tEj. Relative path : mi_directorio_origen')
+        pathCarpetaOrigen=input("#\tIngresar ruta de directorio que desea Copiar: ")        
+        directorioOrigen_Verificado=directorio_verificado(pathCarpetaOrigen)
+
+        if directorioOrigen_Verificado== 'NOEXISTE':
+            print(f'\nError!: No fue posible crear backup a Directorio\n{pathCarpetaOrigen}')
+        else:
+            pathCarpetaOrigen=directorioOrigen_Verificado
+            print(f'\nOk: El nombre del directorio origen es:\n{pathCarpetaOrigen}')
+            print('\n#\tDebes ingresar un nombre o ruta para tu Directorio copia Ej. mi_directorio_backup')
+            pathCarpetaDestino=input("#\tIngresar nombre o ruta del nuevo directorio: ")
+            while pathCarpetaDestino==directorioOrigen_Verificado:
+                print('El nuevo directorio debe ser diferente al inicial')
+                pathCarpetaDestino=input("#\tIngresar nombre o ruta del nuevo directorio: ")
+            try:
+                shutil.copytree(pathCarpetaOrigen,pathCarpetaDestino,symlinks=False,ignore=ignore_files)
+                if so=="Windows":
+                    print('\n############# 2.2 FINALIZA BACKUP ################')
+                    print(f"Ok: El directorio destino se encuentra la ruta:\n {os.getcwd()}\\{pathCarpetaDestino} ")
+                elif so== 'Linux':
+                    print('\n############# 2.2 FINALIZA BACKUP ################')
+                    print(f"Ok: El directorio destino se encuentra la ruta:\n {os.getcwd()}/{pathCarpetaDestino} ")
+            except:
+                print(f'Error!: No fue posible crear backup a {pathCarpetaOrigen}')
+
+    
 
 def crear_backup():
     print("############# 2. CREAR UN BACK UP ################")
@@ -251,14 +308,11 @@ if __name__ == '__main__':
 
     while opcion!=4:        
         if opcion==1:
-            #limpiar_pantalla()
             print("explorar directorio ")
             explorar()
         elif opcion==2:
-            #limpiar_pantalla()
-            crear_backup()
+            crear_backup_imagenes()
         elif opcion==3:
-            #limpiar_pantalla()
             print("Optimizar Imágenes en un Directorio")
             optimizar()
         elif opcion==4:
@@ -277,8 +331,3 @@ if __name__ == '__main__':
             opcion =int(opcion)
         except:
             opcion =0
-            
-    
-
-    
-    

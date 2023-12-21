@@ -14,4 +14,3 @@ Desea optimizar imagenes de algun directorio?
 Ingresar nombre de directorio origen: appfiles\infraestructura
 ############# 2.3 FINALIZA OPTIMIZACION ###############################
 Revisar directorio: appfiles\infraestructura
-
