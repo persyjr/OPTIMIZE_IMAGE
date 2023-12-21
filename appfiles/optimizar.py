@@ -165,47 +165,6 @@ def ignore_files(folder, files):
             
                     ignored_items.append(f)
     return ignored_items              
-def crear_backup_imagenes():
-    print("############# 2. CREAR UN BACK UP ################")
-    crearCopia=input("#\tDesea crear un backup de algún directorio?\n#\tyes or not :")
-    if crearCopia!='yes' and crearCopia.lower()!='yes' and crearCopia!='not' and crearCopia.lower()!='not' :
-        print('\nError!: Respuesta incorrecta ultimo intento ')
-        crearCopia=input("#\tDesea crear un backup de algún directorio?\n#\tyes or not :")
-        
-    if crearCopia=='yes' or crearCopia.lower()=='yes':
-        so=platform.system() 
-        print(f'\n#\t2.1. Debes ingresar la ruta del directorio de origen so: {so}') 
-        if so=="Windows": 
-            print(f'#\tEj. path  : {os.getcwd()}\\mi_directorio_origen')
-        elif so== 'Linux': 
-            print(f'#\tEj. path  : {os.getcwd()}/mi_directorio_origen')   
-        
-        print(f'#\tEj. Relative path : mi_directorio_origen')
-        pathCarpetaOrigen=input("#\tIngresar ruta de directorio que desea Copiar: ")        
-        directorioOrigen_Verificado=directorio_verificado(pathCarpetaOrigen)
-
-        if directorioOrigen_Verificado== 'NOEXISTE':
-            print(f'\nError!: No fue posible crear backup a Directorio\n{pathCarpetaOrigen}')
-        else:
-            pathCarpetaOrigen=directorioOrigen_Verificado
-            print(f'\nOk: El nombre del directorio origen es:\n{pathCarpetaOrigen}')
-            print('\n#\tDebes ingresar un nombre o ruta para tu Directorio copia Ej. mi_directorio_backup')
-            pathCarpetaDestino=input("#\tIngresar nombre o ruta del nuevo directorio: ")
-            while pathCarpetaDestino==directorioOrigen_Verificado:
-                print('El nuevo directorio debe ser diferente al inicial')
-                pathCarpetaDestino=input("#\tIngresar nombre o ruta del nuevo directorio: ")
-            try:
-                shutil.copytree(pathCarpetaOrigen,pathCarpetaDestino,symlinks=False,ignore=ignore_files)
-                if so=="Windows":
-                    print('\n############# 2.2 FINALIZA BACKUP ################')
-                    print(f"Ok: El directorio destino se encuentra la ruta:\n {os.getcwd()}\\{pathCarpetaDestino} ")
-                elif so== 'Linux':
-                    print('\n############# 2.2 FINALIZA BACKUP ################')
-                    print(f"Ok: El directorio destino se encuentra la ruta:\n {os.getcwd()}/{pathCarpetaDestino} ")
-            except:
-                print(f'Error!: No fue posible crear backup a {pathCarpetaOrigen}')
-
-    
 
 def crear_backup():
     print("############# 2. CREAR UN BACK UP ################")
@@ -237,7 +196,8 @@ def crear_backup():
                 print('El nuevo directorio debe ser diferente al inicial')
                 pathCarpetaDestino=input("#\tIngresar nombre o ruta del nuevo directorio: ")
             try:
-                shutil.copytree(pathCarpetaOrigen,pathCarpetaDestino)
+                shutil.copytree(pathCarpetaOrigen,pathCarpetaDestino,symlinks=False,ignore=ignore_files)
+                #shutil.copytree(pathCarpetaOrigen,pathCarpetaDestino) #para copiar sin restriccion
                 if so=="Windows":
                     print('\n############# 2.2 FINALIZA BACKUP ################')
                     print(f"Ok: El directorio destino se encuentra la ruta:\n {os.getcwd()}\\{pathCarpetaDestino} ")
@@ -307,7 +267,7 @@ if __name__ == '__main__':
             print("explorar directorio ")
             explorar()
         elif opcion==2:
-            crear_backup_imagenes()
+            crear_backup()
         elif opcion==3:
             print("Optimizar Imágenes en un Directorio")
             optimizar()
