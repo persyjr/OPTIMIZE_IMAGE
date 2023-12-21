@@ -55,7 +55,7 @@ def explorarDirectorio(rootdir):
             pass
             #path=os.path.join(rootdir, subdir)            
         for subfile in files:
-            if ('.jpg' in subfile) or ('.jpeg' in subfile) or ('.jfif' in subfile) or ('.png' in subfile):
+            if ('.jpg' or '.JPG' in subfile) or ('.jpeg' or '.JPEG' in subfile) or ('.jfif' or '.JFIF' in subfile) or ('.png' or '.PNG'  in subfile):
                 path1=os.path.join(rootdir, subfile)
                 peso=os.path.getsize(path1)
                 imagen={}
@@ -89,11 +89,10 @@ def funOptimizarDirectorio(rootdir):
     print(f'\n############# 3.2 INICIANDO OPTIMIZACION #########') 
     for rootdir, dirs, files in os.walk(rootdir,onerror=None):
         for subdir in dirs:
-            #path=os.path.join(rootdir, subdir)
             pass
         for subfile in files:
             path1=os.path.join(rootdir, subfile)
-            if ('.jpg' in subfile) or ('.jpeg' in subfile) or ('.jfif' in subfile) or ('.png' in subfile):
+            if ('.jpg' or '.JPG' in subfile) or ('.jpeg' or '.JPEG' in subfile) or ('.jfif' or '.JFIF' in subfile) or ('.png' or '.PNG'  in subfile):
                 try:
                     imagen = Image.open(os.path.join(rootdir, subfile))
                     optimizarImagenPillow(imagen,subfile,rootdir,path1)
@@ -101,7 +100,6 @@ def funOptimizarDirectorio(rootdir):
                     print(f'No fue posible optimizar archivo: {subfile}')                
             else:
                 pass
-                #print(f'--\t{subfile}: No es una imagen')
     
 def limpiar_pantalla():
     if so=="Windows": 
@@ -162,11 +160,9 @@ def ignore_files(folder, files):
         peso=os.path.getsize(path1)
         if not os.path.isdir(path1):
             if not peso >400000 :
-                
-                    #print(f'ignora {path1}')
                     ignored_items.append(f)
-            if not(('.jpg' in path1) or ('.jpeg' in path1) or ('.jfif' in path1) or ('.png' in path1)):
-                    #print(f'ignora {path1}')
+            if not (('.jpg' or '.JPG' in path1) or ('.jpeg' or '.JPEG' in path1) or ('.jfif' or '.JFIF' in path1) or ('.png' or '.PNG'  in path1)):
+            
                     ignored_items.append(f)
     return ignored_items              
 def crear_backup_imagenes():
