@@ -87,7 +87,8 @@ def funOptimizarDirectorio(rootdir):
             pass
         for subfile in files:
             path1=os.path.join(rootdir, subfile)
-            if ('.jpg' or '.JPG' in subfile) or ('.jpeg' or '.JPEG' in subfile) or ('.jfif' or '.JFIF' in subfile) or ('.png' or '.PNG'  in subfile):
+            #if ('.jpg' or '.JPG' in subfile) or ('.jpeg' or '.JPEG' in subfile) or ('.jfif' or '.JFIF' in subfile) or ('.png' or '.PNG'  in subfile):
+            if (('.jpg' in subfile)or ('.JPG' in subfile)) or (('.jpeg' in subfile)or ('.JPEG' in subfile)) or (('.jfif' in subfile)or ('.JIFI' in subfile)) or (('.png' in subfile)or ('.PNG' in subfile)):
                 try:
                     imagen = Image.open(os.path.join(rootdir, subfile))
                     optimizarImagenPillow(imagen,subfile,rootdir,path1)
@@ -151,7 +152,8 @@ def ignore_files(folder, files):
         if not os.path.isdir(path1):
             if not peso >400000 :
                 ignored_items.append(f)
-            if not (('.jpg' or '.JPG' in path1) or ('.jpeg' or '.JPEG' in path1) or ('.jfif' or '.JFIF' in path1) or ('.png' or '.PNG'  in path1)):
+            if not((('.jpg' in path1)or ('.JPG' in path1)) or (('.jpeg' in path1)or ('.JPEG' in path1)) or (('.jfif' in path1)or ('.JIFI' in path1)) or (('.png' in path1)or ('.PNG' in path1))):
+            #if not (('.jpg' or '.JPG' in path1) or ('.jpeg' or '.JPEG' in path1) or ('.jfif' or '.JFIF' in path1) or ('.png' or '.PNG'  in path1)):
                 ignored_items.append(f)
     return ignored_items
 def crear_backup():
