@@ -156,24 +156,7 @@ def ignore_files(folder, files):
             if not(('.jpg' in path1.casefold()) or ('.jpeg' in path1.casefold()) or ('.jfif' in path1.casefold()) or ('.png' in path1.casefold())):
                 ignored_items.append(f)
     return ignored_items
-def crear_backup():
-    print("############# 2. CREAR UN BACK UP ################")
-    crearCopia=input("#\tDesea crear un backup de algún directorio?\n#\tyes or not :")
-    if crearCopia!='yes' and crearCopia.lower()!='yes' and crearCopia!='not' and crearCopia.lower()!='not' :
-        print('\nError!: Respuesta incorrecta ultimo intento ')
-        crearCopia=input("#\tDesea crear un backup de algún directorio?\n#\tyes or not :")
 
-    if crearCopia=='yes' or crearCopia.lower()=='yes':
-        so=platform.system()
-        print(f'\n#\t2.1. Debes ingresar la ruta del directorio de origen so: {so}')
-        if so=="Windows":
-            print(f'#\tEj. path  : {os.getcwd()}\\mi_directorio_origen')
-        elif so== 'Linux':
-            print(f'#\tEj. path  : {os.getcwd()}/mi_directorio_origen')
-
-        print(f'#\tEj. Relative path : mi_directorio_origen')
-        pathCarpetaOrigen=input("#\tIngresar ruta de directorio que desea Copiar: ")
-        directorioOrigen_Verificado=directorio_verificado(pathCarpetaOrigen)
 def crear_backup():
     print("############# 2. CREAR UN BACK UP ################")
     crearCopia=input("#\tDesea crear un backup de algún directorio?\n#\tyes or not :")
@@ -212,7 +195,7 @@ def crear_backup():
                     print('\n############# 2.2 FINALIZA BACKUP ################')
                     print(f"Ok: El directorio destino se encuentra la ruta:\n {os.getcwd()}/{pathCarpetaDestino} ")
             except:
-                print(f'Error!: No fue posible crear backup a {pathCarpetaOrigen}')
+                print(f'Error!: No fue posible crear backup a {pathCarpetaOrigen}\n\tYa exite un directorio con ese nombre')
 def optimizar():
     print("\n\n###### 3. OPTIMIZAR IMAGENES DE DIRECTORIO #######")
     optimizarDirectorio=input("#\tDesea optimizar imagenes de algun directorio?\n#\tyes or not :")
